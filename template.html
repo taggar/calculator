@@ -37,6 +37,8 @@
   <script>
 
 
+
+
       var calcButton = document.querySelector('button');
       console.log(calcButton);
       calcButton.addEventListener("click",clickHandler);
@@ -49,13 +51,15 @@
         calcButton.prepend(spinner);
         var timer = setTimeout(function(){
           calcButton.classList.toggle('btn-success');
-          spinner.parentNode.removeChild(spinner);
+          spinner.remove();
         },500);
       }
 
   </script> <!-- dummy content -->
    
   <script>
+
+
 
 
 
