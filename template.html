@@ -42,35 +42,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
   <script>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     var messageBox = document.getElementById('messageBox');
     var inputBoxOne = document.getElementById("inputBoxOne");
     var calcButton = document.querySelector('button');
@@ -83,6 +54,7 @@
 
     function clickHandler() {
       console.log("Clicky!");
+      messageBox.innerText = '';
       calcButton.classList.toggle('btn-success');
       calcButton.textContent = "Calculating...";
       var spinner = document.createElement('i');
@@ -99,7 +71,7 @@
         }
         let result = calculate(Number(inputBoxOne.value), Number(inputBoxTwo.value));
         resultSpan.innerText += result;
-        messageBox.innerText = '';
+
       }, 500);
     }
     function calculate(a, b) {
@@ -110,16 +82,24 @@
           return a + b;
           break;
         case "minus":
+          if (b > a) {
+            messageBox.innerText = "You can't subtract a number from a smaller number";
+            return '';
+          }
           return a - b;
           break;
         case "multiply":
           return a * b;
           break;
         case "divide":
+          if (b == 0) {
+            messageBox.innerText = "You can't divide by 0";
+            return '';
+          }
           return a / b;
           break;
         default:
-          return
+          return '';
       }
     }
 
