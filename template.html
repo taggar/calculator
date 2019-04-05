@@ -1,39 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Calculator</title>
-  <link crossorigin="anonymous"
-        href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-        rel="stylesheet">
-  <link crossorigin="anonymous"
-        href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
-        integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
-        rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css"
-        rel="stylesheet">
-  <link href="stylesheet.css"
-        rel="stylesheet">
+  <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" rel="stylesheet">
+  <link crossorigin="anonymous" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+    integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" rel="stylesheet">
+  <link href="stylesheet.css" rel="stylesheet">
 </head>
+
 <body class="bg-dark pt-4">
-  <div class="container"
-       id="exercisesHolder">
+  <div class="container" id="exercisesHolder">
     <div class="row">
       <div class="col-12 bg-white shadow-sm p-4 mx-auto mt-4 border">
         <!-- Start writing content here -->
-        <button class="btn btn-primary">Calculate!</button>
+        <p id="messageBox"></p>
+        <input id="inputBoxOne" type="text" required>&nbsp;</input>
+        <select id="selectOperator">
+          <option value="plus">+</option>
+          <option value="minus">-</option>
+          <option value="multiply">*</option>
+          <option value="divide">/</option>
+        </select>
+        <input id="inputBoxTwo" type="text" required>&nbsp;</input>
+        <br>
+        <button class="btn btn-primary mt-2">Calculate!</button>
+        <div class="border border-primary mt-2 p-2" id="display">
+          Here is your result:&nbsp;<span id='result'></span>
+        </div>
       </div>
     </div>
   </div>
-  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script> 
-  <script crossorigin="anonymous"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script> 
-  <script crossorigin="anonymous"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script> 
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script crossorigin="anonymous" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script crossorigin="anonymous" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
   <script>
 
 
@@ -47,90 +53,77 @@
 
 
 
-      var calcButton = document.querySelector('button');
-      console.log(calcButton);
-      var calcText="Calculate!";
 
-      calcButton.addEventListener("click",clickHandler);
 
-      function clickHandler() {
-        console.log("Clicky!");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    var messageBox = document.getElementById('messageBox');
+    var inputBoxOne = document.getElementById("inputBoxOne");
+    var calcButton = document.querySelector('button');
+    var calcText = "Calculate!";
+    var resultSpan = document.getElementById("result");
+
+    console.log(calcButton);
+
+    calcButton.addEventListener("click", clickHandler);
+
+    function clickHandler() {
+      console.log("Clicky!");
+      calcButton.classList.toggle('btn-success');
+      calcButton.textContent = "Calculating...";
+      var spinner = document.createElement('i');
+      spinner.className = 'fas fa-spinner fa-spin mr-2';
+      calcButton.prepend(spinner);
+      var timer = setTimeout(function () {
         calcButton.classList.toggle('btn-success');
-        calcButton.textContent="Calculating...";
-        var spinner = document.createElement('i');
-        spinner.className = 'fas fa-spinner fa-spin mr-2';
-        calcButton.prepend(spinner);
-        var timer = setTimeout(function(){
-          calcButton.classList.toggle('btn-success');
-          spinner.remove();
-          calcButton.textContent=calcText;
-        },500);
+        spinner.remove();
+        calcButton.innerText = calcText;
+        resultSpan.innerText = '';
+        if (isNaN(inputBoxOne.value) || isNaN(inputBoxTwo.value)) {
+          messageBox.innerText = 'At least one of your inputs is not a number!';
+          return;
+        }
+        let result = calculate(Number(inputBoxOne.value), Number(inputBoxTwo.value));
+        resultSpan.innerText += result;
+        messageBox.innerText = '';
+      }, 500);
+    }
+    function calculate(a, b) {
+      var selector = document.getElementById("selectOperator");
+
+      switch (selector.value) {
+        case "plus":
+          return a + b;
+          break;
+        case "minus":
+          return a - b;
+          break;
+        case "multiply":
+          return a * b;
+          break;
+        case "divide":
+          return a / b;
+          break;
+        default:
+          return
       }
+    }
 
   </script> <!-- dummy content -->
-   
-  <script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <!-- dummy content -->
-  </script>
 </body>
+
 </html>
