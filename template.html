@@ -44,6 +44,7 @@
 
     var messageBox = document.getElementById('messageBox');
     var inputBoxOne = document.getElementById("inputBoxOne");
+    var inputBoxTwo = document.getElementById("inputBoxTwo");
     var calcButton = document.querySelector('button');
     var calcText = "Calculate!";
     var resultSpan = document.getElementById("result");
@@ -109,6 +110,36 @@
           break;
         default:
           return '';
+      }
+    }
+
+    inputBoxOne.addEventListener('keyup', checkRand);
+    inputBoxTwo.addEventListener('keyup', checkRand);
+
+    function checkRand() {
+      if (event.key === "Enter") {
+        clickHandler();
+        return;
+      }
+      if (event.target.value == 'rand') {
+        event.target.value = Math.random() * 100;
+        return;
+      }
+      if (event.target.value == 'Boom!') {
+        console.log('Boom!');
+        // for document.children
+        // setinterval(drop, 50)
+        // drop transition top = 100vh
+        var all = document.children;
+        for (let i = 0; i < all.length; i++) {
+          all[i].style.top = all[i].offsetTop;
+          setTimeout(function () {
+            all[i].classList.toggle('boomed');
+          }, 100);
+        }
+
+
+        return;
       }
     }
 

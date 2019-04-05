@@ -30,3 +30,17 @@
     background-color: #333;
     color: #fff;
 }
+
+body {
+    position: relative;
+    overflow: hidden;
+}
+
+* {
+    transition: 'all 5s ease-in';
+}
+
+.boomed {
+    position: absolute;
+    top: 100vh;
+}
