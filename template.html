@@ -18,7 +18,7 @@
       <div class="col-12 bg-white shadow-sm p-4 mx-auto mt-4 border">
         <!-- Start writing content here -->
         <p id="messageBox"></p>
-        <input id="inputBoxOne" type="text" required>&nbsp;</input>
+        <input id="inputBoxOne" type="text" required autofocus>&nbsp;</input>
         <select id="selectOperator">
           <option value="plus">+</option>
           <option value="minus">-</option>
@@ -127,18 +127,14 @@
       }
       if (event.target.value == 'Boom!') {
         console.log('Boom!');
-        // for document.children
-        // setinterval(drop, 50)
-        // drop transition top = 100vh
-        var all = document.children;
+        var all = document.body.querySelectorAll('input, select, button, #display');
+
         for (let i = 0; i < all.length; i++) {
-          all[i].style.top = all[i].offsetTop;
           setTimeout(function () {
+            all[i].style.transitionDelay = (Math.random() * 5) + 's';
             all[i].classList.toggle('boomed');
-          }, 100);
+          }, 1000);
         }
-
-
         return;
       }
     }
