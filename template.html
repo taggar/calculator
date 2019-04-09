@@ -131,10 +131,13 @@
 
         for (let i = 0; i < all.length; i++) {
           setTimeout(function () {
-            all[i].style.transitionDelay = (Math.random() * 5) + 's';
+            all[i].style.transitionDelay = (Math.random() * 2) + 's';
             all[i].classList.toggle('boomed');
           }, 1000);
         }
+        setTimeout(function () {
+          document.querySelector('div.row').classList.toggle('boomed');
+        }, 5000)
         return;
       }
     }
