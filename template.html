@@ -113,10 +113,10 @@
       }
     }
 
-    inputBoxOne.addEventListener('keyup', checkRand);
-    inputBoxTwo.addEventListener('keyup', checkRand);
+    inputBoxOne.addEventListener('keyup', checkKeywordInput);
+    inputBoxTwo.addEventListener('keyup', checkKeywordInput);
 
-    function checkRand() {
+    function checkKeywordInput() {
       if (event.key === "Enter") {
         clickHandler();
         return;
