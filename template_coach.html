@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fix me!</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css">
+    <link rel="stylesheet" href="stylesheet.css">
+
+</head>
+<body class="bg-dark pt-4">
+<div id="exercisesHolder" class="container">
+
+
+    <div class="row">
+        <div class="col-12 bg-white shadow-sm p-4 mx-auto mt-4 border">
+            <!-- Start writing content here -->
+            <div class="row mb-1">
+                <div class="col">
+                    <p id="errorMsg"></p>
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col">
+                    <input type="text" id="leftInput" class="form-control inline-block">
+                </div>
+
+                <div class="col">
+                    <select name="operator" id="operator" class="form-control inline-block">
+                        <option value="+">+</option>
+                        <option value="-">-</option>
+                        <option value="x">x</option>
+                        <option value="/">/</option>
+                    </select>
+                </div>
+
+                <div class="col">
+                    <input type="text" id="rightInput" class="form-control inline-block">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <button class="btn btn-primary">Calculate!</button>
+                </div>
+
+                <div class="col">
+                    <div id="borderBox" class="greetingsBoxHolder p-2">
+                        <p>Here is your result: <span id="result"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
+
+
+<script>
+    /** Write your javascript code here **/
+    var btn = document.querySelector("button.btn"),
+        left = document.getElementById("leftInput"),
+        right = document.getElementById("rightInput"),
+        operator = document.getElementById("operator"),
+        errorMsg = document.getElementById("errorMsg");
+
+    // On keyup in one of the input fields
+    // ===================================
+    left.addEventListener("keyup", content_check);
+    right.addEventListener("keyup", content_check);
+
+    // Check the content of the input fields on keyup
+    // ==============================================
+    function content_check(e) {
+        if(this.value === "rand") {
+            this.value = getRandomInt(0,100)
+        }
+
+        if (this.value === "Boom!") {
+            boom_page();
+        }
+
+        if (e.which === 13) {
+            if(preliminary_checks()) {
+                document.getElementById("result").innerHTML = calculate();
+            }
+        }
+    }
+
+
+    // Explode the page
+    // ================
+    function boom_page() {
+        var elements = document.querySelectorAll("*");
+        console.log(elements);
+        for (let element of elements) {
+            element.classList.add("broken");
+            element.style.transition = getRandomInt(4,8) + "s";
+            setTimeout(function() {
+                console.log(element);
+                // Move this specific element offpage
+                // ==================================
+                boom_element(element);
+            }, 200);
+        }
+    }
+
+
+    // Explode a specific element
+    // ==========================
+    function boom_element(element) {
+        if (getRandomInt(0,10) > 5) {
+            element.style.top = getRandomInt(200, 300) + "vh";
+        }
+        else {
+            element.style.bottom = getRandomInt(200, 300) + "vh";
+        }
+
+        if (getRandomInt(0,10) > 5) {
+            element.style.left = getRandomInt(100, 150) + "vw";
+        }
+        else {
+            element.style.right = getRandomInt(100, 150) + "vw";
+        }
+    }
+
+
+    // Function for getting a random integer
+    // =====================================
+    function getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+
+    // When the button is clicked
+    // ==========================
+    btn.addEventListener("click", function() {
+
+        // Adapt the button
+        // ================
+        btn.classList.toggle("btn-success");
+        var icon = document.createElement("i");
+        icon.className = "fa fa-spinner fa-spin mr-2";
+        btn.innerHTML = "Calculating...";
+        btn.prepend(icon);
+
+
+        // After .5 seconds perform necessary actions
+        // ==========================================
+        setTimeout(function() {
+            btn.classList.toggle("btn-success");
+            btn.innerHTML = "Calculate!";
+
+            // If preliminary checks are okay, then calculate the result
+            // =========================================================
+            if(preliminary_checks()) {
+                document.getElementById("result").innerHTML = calculate();
+            }
+
+        }, 500);
+    });
+
+
+    // Do safety checks on inputs before calculating
+    // =============================================
+    function preliminary_checks() {
+        var go = true,
+            err = "";
+
+        if (left.value === "" ) {
+            err = "Please fill in the left field";
+            go = false;
+        }
+
+        if (right.value === "") {
+            err = "Please fill in the right field";
+            go = false;
+        }
+
+        if (right.value === "" && left.value === "") {
+            err = "Please fill in both fields";
+        }
+
+        if (isNaN(left.value)) {
+            err = "The left input field contains something different than a number";
+            go = false;
+        }
+
+        if (isNaN(right.value)) {
+            err = "The right input field contains something different than a number";
+            go = false;
+        }
+
+        if (isNaN(right.value) && isNaN(left.value)) {
+            err = "Both fields contain something different than a number";
+        }
+
+
+        errorMsg.innerHTML = err;
+        return go;
+    }
+
+
+    // Calculate the results if the numbers are in order
+    // =================================================
+    function calculate() {
+        var leftValue = parseFloat(left.value),
+            rightValue = parseFloat(right.value),
+            operatorValue = operator.value,
+            result = "",
+            err = "";
+
+        switch(operatorValue) {
+            default:
+                result = leftValue + rightValue;
+                break;
+
+            case "-":
+                if (rightValue <= leftValue) {
+                    result = leftValue - rightValue;
+                }
+                else {
+                    err = "You can't subtract a bigger number from a smaller one";
+                }
+                break;
+
+            case "/":
+                if (rightValue !== 0) {
+                    if (leftValue % rightValue !== 0) {
+                        err = "You can't divide if the result wouldn't be an integer";
+                    }
+                    else {
+                        result = leftValue / rightValue;
+                    }
+                }
+                else {
+                    err = "You can't divide by 0 !";
+                }
+                break;
+
+            case "x":
+                if (rightValue % 2 !== 0 || leftValue % 2 !== 0) {
+                    err = "You can't multiply by odd numbers";
+                }
+                else {
+                    result = rightValue * leftValue;
+                }
+                break;
+        }
+
+        errorMsg.innerHTML = err;
+        return result;
+    }
+
+</script>
+</body>
+</html>
